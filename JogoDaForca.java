@@ -104,7 +104,7 @@ public class JogoDaForca {
         
         Pattern padrao = Pattern.compile("[a-zA-Z]");
         Matcher alvo = padrao.matcher(letra);
-        //aí se dar bom
+        //aí se der bom
         if(alvo.matches()) {
             letra = letra.toUpperCase();
             
@@ -123,15 +123,17 @@ public class JogoDaForca {
                         }
                     }
                     // esse auxPalavra guarda as letras que o usuário ainda não descobriu, 
-                    // nessa linha ele tá exatamente tirando a letra que acertou e substituindo por ~
+                    // nessa linha tá exatamente tirando a letra que acertou e substituindo por ~ p manter o msm número de 
+                    //caracteres de antes e n dar b.o no for de cima(ele n atriburia a letra no indice certo)
                     auxPalavra = auxPalavra.replace(letra, "~");
                 } else {
+                    //se a letra n tiver na palvra ele entra aqui
+                    
+                    //confere se já n escreveu  a msm letra errada anteriormente
                     if (guardaletraserradas.toString().contains(letra)) {
                         throw new Exception("Letra já foi escrita anteriormente");
                     } else {
-                        //se a letra n tiver na palvra ele entra aqui
-                        
-                        //p ele não repetir a msm letra q já digitou (e errou) antes
+                        //p ele não repetir a msm letra q já digitou (e errou) antes a gente guarda numa string 
                         erros += 1;
                         guardaletraserradas.append(letra + " - ");
                     }
