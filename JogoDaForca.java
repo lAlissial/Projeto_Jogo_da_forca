@@ -28,7 +28,7 @@ public class JogoDaForca {
     //private String[] arquivos = {"0.png","1.png","2.png","3.png","4.png","5.png","6.png"};
     private StringBuffer tracoPalavra;      //guarda as letrinhas descobertas na posição certinha
     private String auxPalavra;              //guarda as letras que AINDA NÂO foram descobertas da plavra sorteada
-    private StringBuffer guardaletraserradas;   //Guardasletraserradas
+    private StringBuffer guardaletraserradas;   //Guarda letras erradas
 
 
     //construtor que lê o arquivo com as n palavras e dicas e as coloca nos respectivos arrays.
@@ -38,28 +38,35 @@ public class JogoDaForca {
         String stringDoArq = "";
         String[] arrayComDicasJuntoDasPalavras;
         String[] juntinhos;
-
+        
+        //abrindo arquivo
         try {
             arquivo = new Scanner(new File(nomearquivo));
         } catch (FileNotFoundException e) {
             System.out.println("Arquivo inexistente/não encontrado");
         }
-
+        
+        //juntando em uma string todo o conteudo do arquivo com "-" separando cd linha
         while (arquivo.hasNextLine()) {
             stringDoArq += arquivo.nextLine() + "-";
         }
-
+        // guardando no array a palavras e a dicas como uma coisa só, cd palavra com sua dica será um elemento desse array
         arrayComDicasJuntoDasPalavras = stringDoArq.split("-");
-
+        
+        // declarando o tamanho dos arrays
         palavras = new String[arrayComDicasJuntoDasPalavras.length];
         dicas = new String[arrayComDicasJuntoDasPalavras.length];
 
+        // o array juntinho a cada iteração receberá um elemento do arrayComDicasJuntoDasPalavras mas esse será quebrado a partir do ";", que acaba por separar a dica da palavra
+        //lembra que no arquivo cada linha tá assim:
+        //PALAVRA;diquinha tal
+        // aí a palavra ficará com indice 0 e a dica com indice 1
         for (int i = 0; i < arrayComDicasJuntoDasPalavras.length; i++) {
             juntinhos = arrayComDicasJuntoDasPalavras[i].split(";");
             palavras[i] = juntinhos[0];
             dicas[i] = juntinhos[1];
         }
-
+        
         N = palavras.length;
 
         guardaletraserradas = new StringBuffer("");
@@ -90,6 +97,10 @@ public class JogoDaForca {
     //inexistência da letra na palavra
     public boolean adivinhou(String letra)  throws Exception{
         // tratando o que vai receber
+        // eu vou tentar parsear o que vai ser recebido, se for um número(q não é o certo[p um jogo da forca]) ele seguirá o try normalmente, por isso logo abaixo ele lançará 
+        // uma exceção.
+        // E se ele não conseguir parsear que é o esperado, já que queremos letras, entrará no catch
+        
         try {
             int testandoLetra = Integer.parseInt(letra);
             throw new Exception("Informe uma LETRA, não um número!");
