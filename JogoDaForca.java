@@ -51,8 +51,9 @@ public class JogoDaForca {
             arrayComDicasJuntoDasPalavras = stringDoArq.split("-");
         
             // declarando o tamanho dos arrays
-            palavras = new String[arrayComDicasJuntoDasPalavras.length];
-            dicas = new String[arrayComDicasJuntoDasPalavras.length];
+            N = arrayComDicasJuntoDasPalavras.length;
+            palavras = new String[N];
+            dicas = new String[N];
 
             // o array juntinho a cada iteração receberá um elemento do arrayComDicasJuntoDasPalavras mas esse será quebrado a partir do ";", que acaba por separar a dica da palavra
             //lembra que no arquivo cada linha tá assim:
@@ -64,9 +65,10 @@ public class JogoDaForca {
                 dicas[i] = juntinhos[1];
             }
         
-            N = palavras.length;
 
             guardaletraserradas = new StringBuffer("");
+            
+            arquivo.close();  
 
             
         } catch (FileNotFoundException e) {
