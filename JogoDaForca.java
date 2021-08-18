@@ -43,32 +43,31 @@ public class JogoDaForca {
         try {
             arquivo = new Scanner(new File(nomearquivo));
             
-                    //juntando em uma string todo o conteudo do arquivo com "-" separando cd linha
-        while (arquivo.hasNextLine()) {
-            stringDoArq += arquivo.nextLine() + "-";
-        }
-        // guardando no array a palavras e a dicas como uma coisa só, cd palavra com sua dica será um elemento desse array
-        arrayComDicasJuntoDasPalavras = stringDoArq.split("-");
+            //juntando em uma string todo o conteudo do arquivo com "-" separando cd linha
+            while (arquivo.hasNextLine()) {
+                stringDoArq += arquivo.nextLine() + "-";
+            }
+            // guardando no array a palavras e a dicas como uma coisa só, cd palavra com sua dica será um elemento desse array
+            arrayComDicasJuntoDasPalavras = stringDoArq.split("-");
         
-        // declarando o tamanho dos arrays
-        palavras = new String[arrayComDicasJuntoDasPalavras.length];
-        dicas = new String[arrayComDicasJuntoDasPalavras.length];
+            // declarando o tamanho dos arrays
+            palavras = new String[arrayComDicasJuntoDasPalavras.length];
+            dicas = new String[arrayComDicasJuntoDasPalavras.length];
 
-        // o array juntinho a cada iteração receberá um elemento do arrayComDicasJuntoDasPalavras mas esse será quebrado a partir do ";", que acaba por separar a dica da palavra
-        //lembra que no arquivo cada linha tá assim:
-        //PALAVRA;diquinha tal
-        // aí a palavra ficará com indice 0 e a dica com indice 1
-        for (int i = 0; i < arrayComDicasJuntoDasPalavras.length; i++) {
-            juntinhos = arrayComDicasJuntoDasPalavras[i].split(";");
-            palavras[i] = juntinhos[0];
-            dicas[i] = juntinhos[1];
-        }
+            // o array juntinho a cada iteração receberá um elemento do arrayComDicasJuntoDasPalavras mas esse será quebrado a partir do ";", que acaba por separar a dica da palavra
+            //lembra que no arquivo cada linha tá assim:
+            //PALAVRA;diquinha tal
+            // aí a palavra ficará com indice 0 e a dica com indice 1
+            for (int i = 0; i < arrayComDicasJuntoDasPalavras.length; i++) {
+                juntinhos = arrayComDicasJuntoDasPalavras[i].split(";");
+                palavras[i] = juntinhos[0];
+                dicas[i] = juntinhos[1];
+            }
         
-        N = palavras.length;
+            N = palavras.length;
 
-        guardaletraserradas = new StringBuffer("");
+            guardaletraserradas = new StringBuffer("");
 
-        arquivo.close();            //fechar arquivo
             
         } catch (FileNotFoundException e) {
             System.out.println("Arquivo inexistente/não encontrado");
