@@ -99,55 +99,35 @@ public class JogoDaForca {
     //inexistência da letra na palavra
     public boolean adivinhou(String letra)  throws Exception{
         // tratando o que vai receber
-        // eu vou tentar parsear o que vai ser recebido, se for um número(q não é o certo[p um jogo da forca]) ele seguirá o try normalmente, por isso logo abaixo ele lançará 
-        // uma exceção.
-        // E se ele não conseguir parsear que é o esperado, já que queremos letras, entrará no catch
-        
-        try {
-            int testandoLetra = Integer.parseInt(letra);
-            throw new Exception("Informe uma LETRA, não um número!");
-        } catch (NumberFormatException e){
-            //Se o usuário digitar mais de uma letra ou um número double vai lançar um exceção
-            if (letra.length()>1){
-                throw new Exception("Informe UMA LETRA válida!");
+        Pattern padrao = Pattern.compile("[a-zA-Z]");
+        Matcher alvo = padrao.matcher(letra);
+        if(alvo.matches()) {
+            letra = letra.toUpperCase();
+
+            if (tracoPalavra.toString().contains(letra)){
+                throw new Exception("Digite uma letra ainda não informada");
             } else {
-                //se tudo ocorrer como esperado vem p cá:
-                letra = letra.toUpperCase();
-                //p ele não digitar a msm letra (q ele acertou) 2 vezes
-                if (tracoPalavra.toString().contains(letra)){
-                    throw new Exception("Digite uma letra ainda não informada");
-                } else {
-                    // faz logo um teste p saber se a letra digitada tá dentro da palavra
-                    if (palavra.contains(letra)) {
-                        // esse for é p percorrer cd letra da palavra --> auxPalavra.substring(k, k + 1)
-                        for (int k = 0; k < auxPalavra.length(); k++) {
-                            if (letra.equals(auxPalavra.substring(k, k + 1))) {
-                                acertos += 1;
-                                // o traço que tava vai ser substituido pela letra que ele acertou no indice certinho
-                                tracoPalavra = tracoPalavra.replace(k, k + 1, letra);
-                            }
-                        }
-                        // esse auxPalavra guarda as letras que o usuário ainda não descobriu, 
-                        // nessa linha ele tá exatamente tirando a letra que acertou e substituindo por ~
-                        auxPalavra = auxPalavra.replace(letra, "~");
-                    } else {
-                        //se a letra n tiver na palvra ele entra aqui
-                        
-                        //p ele não repetir a msm letra q já digitou (e errou) antes
-                        if (guardaletraserradas.toString().contains(letra)){
-                            throw new Exception("Digite uma letra ainda não informada");
-                        }else {
-                            erros += 1;
-                            //guarda a letra q errou com "-" entre as letrinhas
-                            guardaletraserradas.append(letra + " - ");
+                if (palavra.contains(letra)) {
+                    for (int k = 0; k < auxPalavra.length(); k++) {
+                        if (letra.equals(auxPalavra.substring(k, k + 1))) {
+                            acertos += 1;
+                            tracoPalavra = tracoPalavra.replace(k, k + 1, letra);
                         }
                     }
-
-                    return palavra.contains(letra);
+                    auxPalavra = auxPalavra.replace(letra, "~");
+                } else {
+                    if (guardaletraserradas.toString().contains(letra)) {
+                        throw new Exception("Letra já foi escrita anteriormente");
+                    } else {
+                        erros += 1;
+                        guardaletraserradas.append(letra + " - ");
+                    }
                 }
+                return palavra.contains(letra);
             }
+        } else {
+                throw new Exception("Digite UMA LETRA!");
         }
-    // -----------------------------------------
     }
 
 
