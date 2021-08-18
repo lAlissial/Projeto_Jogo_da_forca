@@ -42,11 +42,8 @@ public class JogoDaForca {
         //abrindo arquivo
         try {
             arquivo = new Scanner(new File(nomearquivo));
-        } catch (FileNotFoundException e) {
-            System.out.println("Arquivo inexistente/não encontrado");
-        }
-        
-        //juntando em uma string todo o conteudo do arquivo com "-" separando cd linha
+            
+                    //juntando em uma string todo o conteudo do arquivo com "-" separando cd linha
         while (arquivo.hasNextLine()) {
             stringDoArq += arquivo.nextLine() + "-";
         }
@@ -72,6 +69,12 @@ public class JogoDaForca {
         guardaletraserradas = new StringBuffer("");
 
         arquivo.close();            //fechar arquivo
+            
+        } catch (FileNotFoundException e) {
+            System.out.println("Arquivo inexistente/não encontrado");
+        }
+        
+
     }
 
 
