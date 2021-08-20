@@ -43,6 +43,8 @@ public class JogoDaForca {
         try {
             arquivo = new Scanner(new File(nomearquivo));
             
+            N = Integer.parseInt(arquivo.nextLine());
+            
             //juntando em uma string todo o conteudo do arquivo com "-" separando cd linha
             while (arquivo.hasNextLine()) {
                 stringDoArq += arquivo.nextLine() + "-";
