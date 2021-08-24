@@ -91,7 +91,7 @@ public class JogoDaForca {
     //acertos para as X ocorrências da letra encontrada dentro da palavra ou contabiliza 1 erro para a
     //inexistência da letra na palavra
 
-    public boolean adivinhou(String letra)  throws Exception{
+public boolean adivinhou(String letra)  throws Exception{
         // tratando o que vai receber
         Pattern padraozito = Pattern.compile("[a-zA-Z]");
         Matcher testando = padraozito.matcher(letra);
@@ -104,8 +104,12 @@ public class JogoDaForca {
                 if (this.palavra.contains(letra)) {
                     for (int k = 0; k < this.auxPalavra.length(); k++) {
                         if (letra.equals(this.auxPalavra.substring(k, k + 1))) {
-                            this.acertos += 1;
-                            this.tracoPalavra = this.tracoPalavra.replace(k, k + 1, letra);
+                            if (!this.terminou()) {
+                                this.acertos += 1;
+                                this.tracoPalavra = this.tracoPalavra.replace(k, k + 1, letra);
+                            }else{
+                                throw new Exception("Jogo já terminou inicie novamente!");
+                            }
                         }
                     }
                     this.auxPalavra = this.auxPalavra.replace(letra, "~");
@@ -113,8 +117,12 @@ public class JogoDaForca {
                     if (this.guardaletraserradas.toString().contains(letra)) {
                         throw new Exception("Letra já foi escrita anteriormente");
                     } else {
-                        this.erros += 1;
-                        this.guardaletraserradas.append(letra + "-");
+                        if (!this.terminou()) {
+                            this.erros += 1;
+                            this.guardaletraserradas.append(letra + "-");
+                        } else{
+                            throw new Exception("Jogo já terminou inicie novamente!");
+                        }
                     }
                 }
                 return this.palavra.contains(letra);
