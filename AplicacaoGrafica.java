@@ -81,7 +81,7 @@ public class AplicacaoGrafica {
 
        label_8 = new JLabel("Erros já digitados = ");
        label_8.setForeground(Color.BLACK);
-       label_8.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 11));
+       label_8.setFont(new Font("Courier New", Font.PLAIN, 11));
        label_8.setBounds(8, 118, 267, 25);
        frame.getContentPane().add(label_8);
 
@@ -94,15 +94,15 @@ public class AplicacaoGrafica {
                     jogo.iniciar();
                     label_1.setText("Acertos: 0");
                     label_2.setText("Erros: 0");
-                    label_3.setText("Dica:" + jogo.getDica());
-                    label_5.setText("Palavra=" + jogo.getPalavra());
+                    label_3.setText("Dica: " + jogo.getDica());
+                    label_5.setText("Palavra = " + jogo.getPalavra());
+                    label_8.setText("Erros já digitados:" + jogo.getLetrasErradas());
                     exibirImagem("0.png");
                     label.setText("Jogo iniciado");
 
                 }
                 catch(Exception e1) {
                     label.setText(e1.getMessage());
-                    System.out.println(e1.getMessage());
                 }
             }
         });
@@ -120,12 +120,13 @@ public class AplicacaoGrafica {
 
                     String letra = textField.getText().trim().toUpperCase();
                     if(jogo.adivinhou(letra)) {
-                        label.setText("acertou a letra " + letra);
+                        label.setText("Acertou a letra " + letra.toUpperCase());
                         label_1.setText("Acertos: "+jogo.getAcertos());
                         label_5.setText("Palavra=" + jogo.getPalavra());
                     }
                     else {
-                        label.setText("penalidade: removeu "+jogo.getPenalidade());
+                        label.setText("Você errou");
+                        label.setText("Penalidade: removeu "+jogo.getPenalidade());
                         label_2.setText("Erros: "+jogo.getErros());
                         label_8.setText("Erros já digitados: "+jogo.getLetrasErradas());
                         exibirImagem(jogo.getErros() + ".png");
@@ -134,11 +135,12 @@ public class AplicacaoGrafica {
                     if (jogo.terminou()) {
                         Thread.sleep(2000);	//pausa 2seg
                         label.setText(jogo.getResultado());
+                        //Thread.sleep(9000);
+                       //button.doClick();
                     }
                 }
                 catch(Exception e1) {
                     label.setText(e1.getMessage());
-                    System.out.println(e1.getMessage());
                 }
 
             }
