@@ -3,36 +3,34 @@ package projeto_jodo_da_forca;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Arrays;
-import java.util.Locale;
 import java.util.Random;
 import java.util.Scanner;
-
-
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.io.InputStream;
 
 /**
  * Projeto 1 de POO
- * Grupo de alunos: ºººººººººººººººººººººººººººººººººººººººº
- *
+ * Grupo de alunos: Adriana Albuquerque De Moura e Alíssia Deolinda Oliveira de Lima
  */
 
 public class JogoDaForca {
-    private int N;                              // quantidade de palavras do arquivo (lido do arquivo)*
-    private String[] palavras;                  // um array com as N palavras (lidas do arquivo)
-    private String[] dicas;                     // um array com as N dicas (lidas do arquivo)
-    private String palavra;                     // a palavra sorteada
-    private int indice = 0;                   // posição (0 a N-1) da palavra sorteada no array indice da palavra sorteadado jogo
-    private int acertos = 0;                   // total de acertos do jogo
-    private int erros = 0;                    // total de erros do jogo
+
+    private int N;                                      // quantidade de palavras do arquivo (lido do arquivo)*
+    private String[] palavras;                          // um array com as N palavras (lidas do arquivo)
+    private String[] dicas;                             // um array com as N dicas (lidas do arquivo)
+    private String palavra;                             // a palavra sorteada
+    private int indice = 0;                             // posição (0 a N-1) da palavra sorteada no array indice da palavra sorteadado jogo
+    private int acertos = 0;                            // total de acertos do jogo
+    private int erros = 0;                              // total de erros do jogo
     private String[] penalidades = {"perna", "perna", "braço", "braço", "tronco", "cabeça"};
-    //private String[] arquivos = {"pes.jpg","pernas.jpg","maos.jpg","bracos.jpg","tronco.jpg","cabeca.jpg"};
-    //private String[] arquivos = {"0.png","1.png","2.png","3.png","4.png","5.png","6.png"};
-    private StringBuffer tracoPalavra;      //guarda as letrinhas descobertas na posição certinha
-    private String auxPalavra;              //guarda as letras que AINDA NÂO foram descobertas da plavra sorteada
-    private StringBuffer guardaletraserradas;   //Guardasletraserradas
+    private StringBuffer tracoPalavra;                  //guarda as letrinhas descobertas na posição certinha
+    private String auxPalavra;                          //guarda as letras que AINDA NÂO foram descobertas da plavra sorteada
+    private StringBuffer guardaletraserradas;           //guardas letras erradas
 
 
-    //construtor que lê o arquivo com as n palavras e dicas e as coloca nos respectivos arrays.
-    public JogoDaForca(String nomearquivo) {
+
+    public JogoDaForca(String nomearquivo) throws Exception{
 
         Scanner arquivo = null;
         String stringDoArq = "";
@@ -40,189 +38,152 @@ public class JogoDaForca {
         String[] juntinhos;
 
         try {
-            arquivo = new Scanner(new File(nomearquivo));
-        } catch (FileNotFoundException e) {
-            System.out.println("Arquivo inexistente/não encontrado");
+            //arquivo = new Scanner(new File(nomearquivo));
+            InputStream fonte = this.getClass().getResourceAsStream("/fonte/palavras.txt");
+            arquivo = new Scanner(fonte);
+        } catch (Exception e){ //catch (FileNotFoundException e) {
+            throw new Exception("Arquivo inexistente/não encontrado");
         }
+
+        this.N = Integer.parseInt(arquivo.nextLine());
+
+        while (arquivo.hasNextLine()) {
+            stringDoArq += arquivo.nextLine() + "-";
+        }
+
+        this.N = Integer.parseInt(arquivo.nextLine());
 
         while (arquivo.hasNextLine()) {
             stringDoArq += arquivo.nextLine() + "-";
         }
 
         arrayComDicasJuntoDasPalavras = stringDoArq.split("-");
+        this.palavras = new String[N];
+        this.dicas = new String[N];
 
-        palavras = new String[arrayComDicasJuntoDasPalavras.length];
-        dicas = new String[arrayComDicasJuntoDasPalavras.length];
-
-        for (int i = 0; i < arrayComDicasJuntoDasPalavras.length; i++) {
+        for (int i = 0; i < N; i++) {
             juntinhos = arrayComDicasJuntoDasPalavras[i].split(";");
-            palavras[i] = juntinhos[0];
-            dicas[i] = juntinhos[1];
+            this.palavras[i] = juntinhos[0];
+            this.dicas[i] = juntinhos[1];
         }
 
-        N = palavras.length;
+        this.guardaletraserradas = new StringBuffer("");
 
-        guardaletraserradas = new StringBuffer("");
-
-        arquivo.close();            //fechar arquivo
+        arquivo.close();
     }
 
 
-    // inicia o jogo com o sorteio de uma das n palavras existentes.
+
     public void iniciar() {
+
         Random sortearPalavrita = new Random();
-        indice = sortearPalavrita.nextInt(N);
-        palavra = palavras[indice].toUpperCase();
+        this.indice = sortearPalavrita.nextInt(N);
+        this.palavra = this.palavras[this.indice].toUpperCase();
 
-        tracoPalavra = new StringBuffer("");
+        this.tracoPalavra = new StringBuffer("");
 
-        for (int e = 0; e < palavra.length(); e++) {
-            tracoPalavra.append("_");
+        for (int e = 0; e < this.palavra.length(); e++) {
+            this.tracoPalavra.append("*");
         }
 
-        auxPalavra = new String(palavra);
+        this.auxPalavra = new String(this.palavra);
     }
 
 
-    // retorna true, caso a letra exista dentro da palavra sorteada e
-    //retorna false, caso contrário. Além disso, o método marca as posições encontradas e contabiliza X
-    //acertos para as X ocorrências da letra encontrada dentro da palavra ou contabiliza 1 erro para a
-    //inexistência da letra na palavra
-    public boolean adivinhou(String letra)  throws Exception{
-        // tratando o que vai receber
-        try {
-            int testandoLetra = Integer.parseInt(letra);
-            throw new Exception("Informe uma LETRA, não um número!");
-        } catch (NumberFormatException e){
-            if (letra.length()>1){
-                throw new Exception("Informe UMA LETRA válida!");
-            } else {
-                letra = letra.toUpperCase();
 
-                if (tracoPalavra.toString().contains(letra)){
-                    throw new Exception("Digite uma letra ainda não informada");
-                } else {
-                    if (palavra.contains(letra)) {
-                        for (int k = 0; k < auxPalavra.length(); k++) {
-                            if (letra.equals(auxPalavra.substring(k, k + 1))) {
-                                acertos += 1;
-                                tracoPalavra = tracoPalavra.replace(k, k + 1, letra);
+    public boolean adivinhou(String letra)  throws Exception{
+
+        Pattern padraozito = Pattern.compile("[a-zA-Z]");
+        Matcher testando = padraozito.matcher(letra);
+
+        if(testando.matches()) {
+            letra = letra.toUpperCase();
+
+            if (this.tracoPalavra.toString().contains(letra)){
+                throw new Exception("Digite uma letra ainda não informada");
+            } else {
+                if (this.palavra.contains(letra)) {
+                    for (int k = 0; k < this.auxPalavra.length(); k++) {
+                        if (letra.equals(this.auxPalavra.substring(k, k + 1))) {
+                            if (!this.terminou()) {
+                                this.acertos ++;
+                                this.tracoPalavra = this.tracoPalavra.replace(k, k + 1, letra);
+                            }else{
+                                throw new Exception("Jogo já terminou inicie novamente!");
                             }
                         }
-                        auxPalavra = auxPalavra.replace(letra, "~");
+                    }
+                    this.auxPalavra = this.auxPalavra.replace(letra, "~");
+
+                } else {
+                    if (this.guardaletraserradas.toString().contains(letra)) {
+                        throw new Exception("Letra já foi escrita anteriormente");
                     } else {
-                        if (guardaletraserradas.toString().contains(letra)){
-                            throw new Exception("Digite uma letra ainda não informada");
-                        }else {
-                            erros += 1;
-                            guardaletraserradas.append(letra + " - ");
+                        if (!this.terminou()) {
+                            this.erros ++;
+                            this.guardaletraserradas.append(letra + "-");
+                        } else{
+                            throw new Exception("Jogo já terminou inicie novamente!");
                         }
                     }
-
-                    return palavra.contains(letra);
                 }
+                return this.palavra.contains(letra);
             }
+        } else {
+            throw new Exception("Digite UMA LETRA!");
         }
-    // -----------------------------------------
     }
 
 
 
-
-
-    //retorna true, se o total de acertos atingir o total de letras da palavra sorteada ou
-    //se o total de erros atingir seis.
     public boolean terminou() {
-        return (acertos == palavra.length() || erros == 6);
+        return (this.acertos == this.palavra.length() || this.erros == 6);
     }
 
 
 
-
-    //retorna a palavra sorteada com as letras adivinhadas reveladas e com as letras
-    //não adivinhadas escondidas com “*”.
-    public String getPalavra() {
-        String palavrita = tracoPalavra.toString().replace("_", "*");
-        return palavrita;
-    }
+    public String getPalavra() { return this.tracoPalavra.toString();}
 
 
 
-
-
-    //retorna a dica da palavra sorteada.
     public String getDica() {
-        return dicas[indice];
+        return this.dicas[indice];
     }
 
 
 
-
-
-    //retorna o nome da penalidade de acordo com o total de erros.
     public String getPenalidade() {
-        String guardando = "";
-        if (erros == 1 || erros == 2){
-            guardando = penalidades[0];
-        } else{
-            if (erros == 3 || erros == 4){
-                guardando = penalidades[2];
-            }
-            if (erros == 5){
-                guardando = penalidades[4];
-            }
-            if (erros == 6){
-                guardando = penalidades[5];
-            }
-        }
-        return guardando;
+        return this.penalidades[this.erros - 1];
     }
 
 
 
-
-    //retorna a imagem da penalidade lida de arquivo de acordo
-    //com o total de erros (usada em aplicação gráfica).
-    /*public BufferedReader getImgPenalidade() {
-
-    }*/
-
-
-
-
-    // retorna o total de acertos
     public int getAcertos() {
-        return acertos;
+        return this.acertos;
     }
 
 
 
-
-    //retorna o total de erros
     public int getErros() {
-        return erros;
+        return this.erros;
     }
 
 
 
-
-    //retorna “ganhou o jogo” ou “você foi enforcado”
     public String getResultado() {
-        String guardaresultado = "";
-        if (acertos==palavra.length()){
-            guardaresultado = "GANHOU O JOGO!";
+
+        if (this.acertos==this.palavra.length()){
+            return "GANHOU O JOGO!";
+        } else {
+            return "VOCÊ FOI ENFORCADO";
         }
-        if(erros==6){
-            guardaresultado = "VOCÊ FOI ENFORCADO";
-        }
-        return guardaresultado;
+
     }
 
 
 
-
-    // retorna as letras erradas já ditas
     public String getLetrasErradas(){
-        return guardaletraserradas.toString();
+        return this.guardaletraserradas.toString();
     }
+
 }
