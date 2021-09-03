@@ -7,6 +7,7 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.io.InputStream;
 
 /**
  * Projeto 1 de POO
@@ -37,9 +38,17 @@ public class JogoDaForca {
         String[] juntinhos;
 
         try {
-            arquivo = new Scanner(new File(nomearquivo));
-        } catch (FileNotFoundException e) {
+            //arquivo = new Scanner(new File(nomearquivo));
+            InputStream fonte = this.getClass().getResourceAsStream("/fonte/palavras.txt");
+            arquivo = new Scanner(fonte);
+        } catch (Exception e){ //catch (FileNotFoundException e) {
             throw new Exception("Arquivo inexistente/não encontrado");
+        }
+
+        this.N = Integer.parseInt(arquivo.nextLine());
+
+        while (arquivo.hasNextLine()) {
+            stringDoArq += arquivo.nextLine() + "-";
         }
 
         this.N = Integer.parseInt(arquivo.nextLine());
