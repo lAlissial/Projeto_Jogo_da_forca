@@ -1,4 +1,4 @@
-package projeto_jodo_da_forca;
+package Joguito_da_forca;
 
 import java.awt.Color;
 import java.awt.EventQueue;
@@ -55,7 +55,7 @@ public class AplicacaoGrafica {
     /**
      * Initialize the contents of the frame.
      */
-   private void initialize() {
+    private void initialize() {
         frame = new JFrame();
         frame.getContentPane().setFont(new Font("Tahoma", Font.PLAIN, 11));
         frame.setTitle("Jogo da Forca");
@@ -79,11 +79,11 @@ public class AplicacaoGrafica {
         frame.getContentPane().add(label_5);
 
 
-       label_8 = new JLabel("Erros já digitados = ");
-       label_8.setForeground(Color.BLACK);
-       label_8.setFont(new Font("Courier New", Font.PLAIN, 11));
-       label_8.setBounds(8, 118, 267, 25);
-       frame.getContentPane().add(label_8);
+        label_8 = new JLabel("Erros já digitados = ");
+        label_8.setForeground(Color.BLACK);
+        label_8.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 11));
+        label_8.setBounds(8, 118, 267, 25);
+        frame.getContentPane().add(label_8);
 
 
         button = new JButton("Iniciar");
@@ -99,6 +99,7 @@ public class AplicacaoGrafica {
                     label_8.setText("Erros já digitados:" + jogo.getLetrasErradas());
                     exibirImagem("0.png");
                     label.setText("Jogo iniciado");
+                    button_1.setEnabled(true);
 
                 }
                 catch(Exception e1) {
@@ -120,23 +121,23 @@ public class AplicacaoGrafica {
 
                     String letra = textField.getText().trim().toUpperCase();
                     if(jogo.adivinhou(letra)) {
-                        label.setText("Acertou a letra " + letra.toUpperCase());
+                        label.setText("acertou a letra " + letra);
                         label_1.setText("Acertos: "+jogo.getAcertos());
                         label_5.setText("Palavra=" + jogo.getPalavra());
                     }
                     else {
-                        label.setText("Você errou");
-                        label.setText("Penalidade: removeu "+jogo.getPenalidade());
+                        label.setText("penalidade: removeu "+jogo.getPenalidade());
                         label_2.setText("Erros: "+jogo.getErros());
                         label_8.setText("Erros já digitados: "+jogo.getLetrasErradas());
                         exibirImagem(jogo.getErros() + ".png");
                     }
+                    textField.setText("");
+                    textField.requestFocus();
 
                     if (jogo.terminou()) {
                         Thread.sleep(2000);	//pausa 2seg
                         label.setText(jogo.getResultado());
-                        //Thread.sleep(9000);
-                       //button.doClick();
+                        button_1.setEnabled(false);
                     }
                 }
                 catch(Exception e1) {
@@ -184,4 +185,3 @@ public class AplicacaoGrafica {
         label_6.setIcon(icon);
     }
 }
-
