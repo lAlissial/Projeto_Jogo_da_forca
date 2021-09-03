@@ -89,9 +89,45 @@ public class JogoDaForca {
         this.auxPalavra = new String(this.palavra);
     }
 
-
-
     public boolean adivinhou(String letra)  throws Exception{
+
+        Pattern padraozito = Pattern.compile("[a-zA-Z]");
+        Matcher testando = padraozito.matcher(letra);
+
+        letra = letra.toUpperCase();
+
+        if(!testando.matches()){
+            throw new Exception("Digite UMA LETRA!");
+        }
+        if (this.tracoPalavra.toString().contains(letra)) {
+            throw new Exception("Digite uma letra ainda não informada");
+        }
+        if (this.terminou()) {
+            throw new Exception("Jogo já terminou inicie novamente!");
+        }
+
+        if (this.guardaletraserradas.toString().contains(letra)) {
+            throw new Exception("Letra já foi escrita anteriormente");
+        }
+
+        if (this.palavra.contains(letra)) {
+            for (int k = 0; k < this.auxPalavra.length(); k++) {
+                if (letra.equals(this.auxPalavra.substring(k, k + 1))) {
+                    this.acertos ++;
+                    this.tracoPalavra = this.tracoPalavra.replace(k, k + 1, letra);
+                }
+            }
+            this.auxPalavra = this.auxPalavra.replace(letra, "~");
+
+        } else {
+            this.erros ++;
+            this.guardaletraserradas.append(letra + "-");
+        }
+        return this.palavra.contains(letra);
+    }
+
+
+    /*public boolean adivinhou(String letra)  throws Exception{
 
         Pattern padraozito = Pattern.compile("[a-zA-Z]");
         Matcher testando = padraozito.matcher(letra);
@@ -132,7 +168,7 @@ public class JogoDaForca {
         } else {
             throw new Exception("Digite UMA LETRA!");
         }
-    }
+    }*/
 
 
 
